@@ -1,0 +1,417 @@
+[
+  {
+    "field_name": "Workload Number",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "216"
+  },
+  {
+    "field_name": "Workload Name",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NCCL Bandwidth Test"
+  },
+  {
+    "field_name": "GPU Vendor",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NVIDIA"
+  },
+  {
+    "field_name": "Repo Name",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "gpu-bench-nvidia-nccl-bandwidth-test-ubu2404"
+  },
+  {
+    "field_name": "Main Goal",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Measure NCCL collective bandwidth and latency"
+  },
+  {
+    "field_name": "Validation Objective",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Validates NCCL collective bandwidth and latency across the GPUs in the communicator. On one GPU the three metrics are na (requires at least two GPUs)"
+  },
+  {
+    "field_name": "Metrics",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "#1: Bus bandwidth at max message size, GB/s (busbw_gb_s); #2: Algorithm bandwidth at max message size, GB/s (algbw_gb_s); #3: Latency at min message size, us (latency_us)"
+  },
+  {
+    "field_name": "Command Tools Executed",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup> <iters> <num_gpus> <collective>"
+  },
+  {
+    "field_name": "Command Execution Details and Purpose",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Compile src/nccl_bw.cu with nvcc/NCCL and run bin/nccl_bw for each collective and message size, parse busbw_gb_s, algbw_gb_s, and latency_us, to measure NCCL collective bandwidth. This is not upstream nccl-tests or MPI"
+  },
+  {
+    "field_name": "Command Methodology",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Sweep message sizes per collective with the local bin/nccl_bw (single process, ncclCommInitAll), recording bandwidth at the largest size and latency at the smallest"
+  },
+  {
+    "field_name": "Execution Description With Parameters",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter. warmup_iters and num_iterations time each size"
+  },
+  {
+    "field_name": "Execution Domain",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Memory / Transfer"
+  },
+  {
+    "field_name": "Workload Category",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Memory, Bandwidth & Data Movement"
+  },
+  {
+    "field_name": "Workload Type",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Benchmark"
+  },
+  {
+    "field_name": "Target Hardware",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "GPU"
+  },
+  {
+    "field_name": "GPU Model",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "H100 SXM 80GB"
+  },
+  {
+    "field_name": "Raw Output Format",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples"
+  },
+  {
+    "field_name": "Primary Record Granularity",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "one row for all_reduce"
+  },
+  {
+    "field_name": "Raw Output Example",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message\n0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),"
+  },
+  {
+    "field_name": "run_benchmark Command Plus Options for Smoke Run",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "bash run_benchmark.sh --smoke --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 1024 --step-factor 2 --warmup-iters 1 --num-iterations 2"
+  },
+  {
+    "field_name": "run_benchmark Command Plus Options for Baseline Run",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "bash run_benchmark.sh --baseline --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 16777216 --step-factor 2 --warmup-iters 5 --num-iterations 480000"
+  },
+  {
+    "field_name": "run_benchmark Command Plus Options for Extended Run",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "bash run_benchmark.sh --extended --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 16777216 --step-factor 2 --warmup-iters 10 --num-iterations 620000"
+  },
+  {
+    "field_name": "Output Fields / Metrics to Parse",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "collective, num_gpus (GPUs used), bytes (largest size), busbw_gb_s and algbw_gb_s (at the largest size), latency_us (at the smallest size)"
+  },
+  {
+    "field_name": "Success Criteria",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "every collective and size exits 0 and reports busbw"
+  },
+  {
+    "field_name": "Parser and Normalization Notes",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Below two GPUs each metric is the text na (requires at least two GPUs), and summary.json reports that text. busbw applies the 2(n-1)/n factor for all_reduce only. Every size is in nccl_sweep.csv"
+  },
+  {
+    "field_name": "Hardware Config",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NVIDIA H100 SXM host (20+ vCPUs, 128+ GB RAM, local NVMe), 1x H100 SXM (80 GB HBM3, sm_90, 132 SMs)"
+  },
+  {
+    "field_name": "GPU Architecture",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "sm_90 (NVIDIA Hopper H100)"
+  },
+  {
+    "field_name": "Framework",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Bash, SQLite, Python, PyYAML, CUDA Runtime, NVCC, NCCL"
+  },
+  {
+    "field_name": "OS Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Ubuntu 24.04"
+  },
+  {
+    "field_name": "Kernel Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "kernel 6.8.0"
+  },
+  {
+    "field_name": "Runtime Language",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "C++"
+  },
+  {
+    "field_name": "Container Base Image",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04"
+  },
+  {
+    "field_name": "Python Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Python 3.12.3"
+  },
+  {
+    "field_name": "GPU Runtime Version (was ROCm Version)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "CUDA 12.8"
+  },
+  {
+    "field_name": "BLAS Version (was rocBLAS version)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - rocBLAS not used"
+  },
+  {
+    "field_name": "Mistral-7B Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - Mistral not used"
+  },
+  {
+    "field_name": "PyTorch Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - PyTorch not used"
+  },
+  {
+    "field_name": "torchvision Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - torchvision not used"
+  },
+  {
+    "field_name": "vLLM Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - vLLM not used"
+  },
+  {
+    "field_name": "vLLM Wheel/Source Index",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - vLLM not used"
+  },
+  {
+    "field_name": "SGLang Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - SGLang not used"
+  },
+  {
+    "field_name": "SGLang Repository/Commit",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - SGLang not used"
+  },
+  {
+    "field_name": "Cmake Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "CMake 3.28.3"
+  },
+  {
+    "field_name": "g++ Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - CMake not used"
+  },
+  {
+    "field_name": "Known Runtime Constraints (<=35 Words Each)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "On one GPU there is no inter-GPU traffic, so the metrics are na. Multi-GPU runs need matching visible devices"
+  },
+  {
+    "field_name": "Parameter_01",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "num_gpus"
+  },
+  {
+    "field_name": "Parameter_02",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "collective"
+  },
+  {
+    "field_name": "Parameter_03",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "min_bytes"
+  },
+  {
+    "field_name": "Parameter_04",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "max_bytes"
+  },
+  {
+    "field_name": "Parameter_05",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "step_factor"
+  },
+  {
+    "field_name": "Parameter_06",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "warmup_iters"
+  },
+  {
+    "field_name": "Parameter_07",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "num_iterations"
+  },
+  {
+    "field_name": "Parameter_08",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_09",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_10",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_11",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_12",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_13",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_14",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_15",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_16",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_17",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_18",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_19",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "Parameter_20",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "-"
+  },
+  {
+    "field_name": "GPU Architecutre ID",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "sm_90"
+  },
+  {
+    "field_name": "GPU Kernel Execution Runtime (HIP or CUDA)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "CUDA"
+  },
+  {
+    "field_name": "System Monitoring Tool",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "nvidia-smi / DCGM"
+  },
+  {
+    "field_name": "Validation & Diagnostics Suite",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - NVIDIA DCGM Diagnostics not used"
+  },
+  {
+    "field_name": "Collective Communication Library",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NCCL"
+  },
+  {
+    "field_name": "Convolution or DNN Library",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - cuDNN not used"
+  },
+  {
+    "field_name": "Benchmark Schema Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "1.3.0"
+  },
+  {
+    "field_name": "Schema Last Updated",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "2026-09-05"
+  },
+  {
+    "field_name": "Installation and Execution Summary",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Compile src/nccl_bw.cu with nvcc/NCCL and run bin/nccl_bw for each collective and message size, parse busbw_gb_s, algbw_gb_s, and latency_us, to measure NCCL collective bandwidth. This is not upstream nccl-tests or MPI"
+  },
+  {
+    "field_name": "Workload Command Line Executable",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup> <iters> <num_gpus> <collective>"
+  },
+  {
+    "field_name": "ROCm Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "CUDA 12.8"
+  },
+  {
+    "field_name": "rocBLAS Version",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "N/A - rocBLAS not used"
+  },
+  {
+    "field_name": "Execution Summary (Run and Measure)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Compile src/nccl_bw.cu with nvcc/NCCL and run bin/nccl_bw for each collective and message size, parse busbw_gb_s, algbw_gb_s, and latency_us, to measure NCCL collective bandwidth. This is not upstream nccl-tests or MPI"
+  },
+  {
+    "field_name": "nVidia Porting Instructions (Reference Only)",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Native NVIDIA CUDA workload. Execute on the stated Ubuntu release with the host NVIDIA driver and CUDA userspace. ROCm porting notes do not apply."
+  },
+  {
+    "field_name": "AMD nVidia Applicable",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NVIDIA"
+  },
+  {
+    "field_name": "Model Context Protocols",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "None"
+  },
+  {
+    "field_name": "Profile Parameter Values",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Parameters_SmokeBaselineExtend",
+    "value": "{\"num_gpus\": {\"smoke\": \"1\", \"baseline\": \"1\", \"extended\": \"1\", \"notes\": \"\"}, \"collective\": {\"smoke\": \"all\", \"baseline\": \"all\", \"extended\": \"all\", \"notes\": \"\"}, \"min_bytes\": {\"smoke\": \"8\", \"baseline\": \"8\", \"extended\": \"8\", \"notes\": \"\"}, \"max_bytes\": {\"smoke\": \"1024\", \"baseline\": \"16777216\", \"extended\": \"16777216\", \"notes\": \"\"}, \"step_factor\": {\"smoke\": \"2\", \"baseline\": \"2\", \"extended\": \"2\", \"notes\": \"\"}, \"warmup_iters\": {\"smoke\": \"1\", \"baseline\": \"5\", \"extended\": \"10\", \"notes\": \"\"}, \"num_iterations\": {\"smoke\": \"2\", \"baseline\": \"480000\", \"extended\": \"620000\", \"notes\": \"00_75 H100 20260905: collector uses min_bytes only; 600000 inner iters is still ~10s on 1 GPU. Duration is overlay rounds smoke=1 / baseline=20 / extended=48. | 2026-09-11 GARY_LEDGER (runtime_ledger_201_232): baseline (600000 iters, no prior retune) measured 2:09/2:13/2:16 (avg 2:13) across 3 live loop runs against a 'make at least 3 min' target. Rate ~4524 iters/s. Scaled 600000 x (240/133) ~= 1.1e6 to retarget ~4 min baseline. Extended not flagged -- left unchanged. Unconfirmed by a fresh run. | 2026-09-24: collector now sweeps min_bytes..max_bytes (was min_bytes only) with iterations scaled per size; repeat rounds halved to baseline 10 / extended 24 to hold duration. num_iterations is the per-sweep budget at min_bytes. Re-time on the next run. | 2026-09-28 GARY_LEDGER (aggregated_runtime_ledgers_101_201_301_401_20260928_9am; targets baseline 3-5 min, extended 8-15 min): 1100000/1520000 -> 480000/850000. baseline 1.1e6 measured 7:45/7:51, extended 1.52e6 measured 19:49/21:02 (overlay rounds 10/24). Chosen between the linear scale and the two-point fit (~141 s fixed): baseline predicted 3:30-4:45, extended 11:20-12:30. Unconfirmed by a fresh run.\"}}"
+  },
+  {
+    "field_name": "Profile Command Authorship",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Parameters_SmokeBaselineExtend",
+    "value": "Workload_Definitions run_benchmark command columns are generated from Parameters_SmokeBaselineExtend. Author parameter values on the Parameters_SmokeBaselineExtend sheet only. Do not invent smoke/baseline/extended sweep numbers. Sweep/list flags in the command cells are documentary; omit those flags so config/benchmark_config.yaml expands cases."
+  }
+]
