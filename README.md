@@ -32,14 +32,14 @@ This repository is one of the 32 workloads in the NVIDIA Ubuntu 24.04 bundle, [`
 apt-get update && apt-get install -y git
 git clone --recurse-submodules https://github.com/garys-gpu-benchmarks/bundle-nvidia-ubuntu-2404 /opt/benchmarks \
   && cd /opt/benchmarks \
-  && ./run.sh list \
+  && ./run_benchmark_suite.sh --list \
   && cd /opt/benchmarks/216-gpu-bench-nvidia-nccl-bandwidth-test-ubu2404 \
   && bash run_benchmark.sh --profile smoke --validate \
   && cd /opt/benchmarks \
   && echo "Done: 32 workloads in /opt/benchmarks; 216-gpu-bench-nvidia-nccl-bandwidth-test-ubu2404 smoke run passed. Next: ./run_benchmark_suite.sh --help"
 ```
 
-Every line in `./run.sh list` should show `ready`. The commands are joined with `&&`, so if the clone or the smoke run fails, the chain stops there, and the closing message appears only when everything succeeded. The chain ends in `/opt/benchmarks`, where the suite runner is. For more extensive testing:
+Every line in `./run_benchmark_suite.sh --list` should show `ready`; it exits with an error if any workload is not fetched. The commands are joined with `&&`, so if the clone, the list or the smoke run fails, the chain stops there, and the closing message appears only when everything succeeded. The chain ends in `/opt/benchmarks`, where the suite runner is. For more extensive testing:
 
 ```bash
 ./run_benchmark_suite.sh -p smoke                 # smoke test of all 32 workloads
@@ -73,8 +73,8 @@ Three operator scripts from [`garys-gpu-benchmarks/gpu-bench-suite`](https://git
 - **`get_remote_info.sh`** (on your laptop; Git Bash on Windows) — over one SSH connection, copies the runtime ledger and every workload's `results/raw`, `results/parsed` and suite logs into `RUNTIME_LEDGERS/` and `DIRECTORIES/`.
   ```bash
   git clone https://github.com/garys-gpu-benchmarks/gpu-bench-suite && cd gpu-bench-suite
-  ./scripts/get_remote_info.sh 203.0.113.10                     # root@host, port 22
-  ./scripts/get_remote_info.sh -i ~/.ssh/id_ed25519 -o ~/results ubuntu@203.0.113.10 2222
+  ./scripts/get_remote_info.sh --host 203.0.113.10              # root@host, port 22
+  ./scripts/get_remote_info.sh --host ubuntu@203.0.113.10 --port 2222 -i ~/.ssh/id_ed25519 -o ~/results
   ```
 - **`show_metrics.sh`** (laptop or GPU host) — prints one workload's runs from the runtime ledger in fixed-width metric columns with per-profile means. On the GPU host it is `/opt/benchmarks/show_metrics.sh`.
   ```bash
@@ -90,15 +90,15 @@ Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message
 ## 2. What It Validates
 
 - Validates NCCL collective bandwidth and latency across the GPUs in the communicator. On one GPU the three metrics are na (requires at least two GPUs)
-- #1: Bus bandwidth at max message size, GB/s (busbw_gb_s); is present and physically sensible.
-- #2: Algorithm bandwidth at max message size, GB/s (algbw_gb_s); is present and physically sensible.
-- #3: Latency at min message size, us (latency_us) is present and physically sensible.
+- #1: All-reduce bus bandwidth at max message size, GB/s, na on single GPU (allreduce_busbw_gb_s); is present and physically sensible.
+- #2: All-reduce algorithm bandwidth at max message size, GB/s, na on single GPU (allreduce_algbw_gb_s); is present and physically sensible.
+- #3: All-reduce latency at min message size, us, na on single GPU (allreduce_latency_at_min_bytes_us) is present and physically sensible.
 
 ## 3. Metrics Captured
 
-- **#1: Bus bandwidth at max message size, GB/s** — stored as `busbw_gb_s`.
-- **#2: Algorithm bandwidth at max message size, GB/s** — stored as `algbw_gb_s`.
-- **#3: Latency at min message size, us** — stored as `latency_us`.
+- **#1: All-reduce bus bandwidth at max message size, GB/s, na on single GPU** — stored as `allreduce_busbw_gb_s`.
+- **#2: All-reduce algorithm bandwidth at max message size, GB/s, na on single GPU** — stored as `allreduce_algbw_gb_s`.
+- **#3: All-reduce latency at min message size, us, na on single GPU** — stored as `allreduce_latency_at_min_bytes_us`.
 
 ## 4. Hardware Requirements
 
@@ -128,8 +128,8 @@ Ubuntu 24.04 / NVIDIA / Bash, SQLite, Python, PyYAML, CUDA Runtime, NVCC, NCCL
 | OS | Ubuntu 24.04 |
 | Kernel | kernel 6.8.0 |
 | Python | Python 3.12.3 |
-| ROCm | CUDA 12.8 |
-| rocBLAS | N/A - rocBLAS not used |
+| ROCm | CUDA 12.6 (nvcc 12.6.85 preinstalled in the container; setup installs 12.8 only when nvcc is missing). Driver 580.159.04 reports CUDA 13.0 |
+| rocBLAS | N/A - cuBLAS not used |
 
 Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter.
 
@@ -160,7 +160,7 @@ source ".venv/bin/activate"
 
 NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples
 
-sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message
+sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_algbw_gb_s,allreduce_latency_at_min_bytes_us,error_message
 0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),
 
 ```bash
@@ -175,7 +175,7 @@ Consolidated metrics from the most recent run — suitable for CI artifact uploa
 
 NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples
 
-sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message
+sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_algbw_gb_s,allreduce_latency_at_min_bytes_us,error_message
 0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),
 
 ## 9. Baselines / Thresholds

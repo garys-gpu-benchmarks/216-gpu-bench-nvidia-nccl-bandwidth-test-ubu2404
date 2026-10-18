@@ -37,7 +37,7 @@
   {
     "field_name": "Metrics",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "#1: Bus bandwidth at max message size, GB/s (busbw_gb_s); #2: Algorithm bandwidth at max message size, GB/s (algbw_gb_s); #3: Latency at min message size, us (latency_us)"
+    "value": "#1: All-reduce bus bandwidth at max message size, GB/s, na on single GPU (allreduce_busbw_gb_s); #2: All-reduce algorithm bandwidth at max message size, GB/s, na on single GPU (allreduce_algbw_gb_s); #3: All-reduce latency at min message size, us, na on single GPU (allreduce_latency_at_min_bytes_us)"
   },
   {
     "field_name": "Command Tools Executed",
@@ -97,7 +97,7 @@
   {
     "field_name": "Raw Output Example",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message\n0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),"
+    "value": "sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_algbw_gb_s,allreduce_latency_at_min_bytes_us,error_message\n0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),"
   },
   {
     "field_name": "run_benchmark Command Plus Options for Smoke Run",
@@ -107,17 +107,17 @@
   {
     "field_name": "run_benchmark Command Plus Options for Baseline Run",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "bash run_benchmark.sh --baseline --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 16777216 --step-factor 2 --warmup-iters 5 --num-iterations 295000"
+    "value": "bash run_benchmark.sh --baseline --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 1073741824 --step-factor 2 --warmup-iters 5 --num-iterations 295000"
   },
   {
     "field_name": "run_benchmark Command Plus Options for Extended Run",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "bash run_benchmark.sh --extended --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 16777216 --step-factor 2 --warmup-iters 10 --num-iterations 620000"
+    "value": "bash run_benchmark.sh --extended --validate --num-gpus 1 --collective all --min-bytes 8 --max-bytes 1073741824 --step-factor 2 --warmup-iters 10 --num-iterations 620000"
   },
   {
     "field_name": "Output Fields / Metrics to Parse",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "collective, num_gpus (GPUs used), bytes (largest size), busbw_gb_s and algbw_gb_s (at the largest size), latency_us (at the smallest size)"
+    "value": "collective, num_gpus (GPUs used), bytes (largest size), allreduce_busbw_gb_s and allreduce_algbw_gb_s (at the largest size), allreduce_latency_at_min_bytes_us (at the smallest size)"
   },
   {
     "field_name": "Success Criteria",
@@ -127,7 +127,7 @@
   {
     "field_name": "Parser and Normalization Notes",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Below two GPUs each metric is the text na (requires at least two GPUs), and summary.json reports that text. busbw applies the 2(n-1)/n factor for all_reduce only. Every size is in nccl_sweep.csv"
+    "value": "Below two GPUs each metric is the text na (requires at least two GPUs), and summary.json reports that text. bin/nccl_bw uses the nccl-tests busbw factors: 2(n-1)/n for all_reduce, (n-1)/n for all_gather and reduce_scatter, 1 for broadcast and reduce. The collector publishes all_reduce only. Every size is in nccl_sweep.csv"
   },
   {
     "field_name": "Hardware Config",
@@ -157,7 +157,7 @@
   {
     "field_name": "Container Base Image",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04"
+    "value": "Provider-supplied Ubuntu 24.04 container (CUDA 12.6 toolkit preinstalled); the generator does not build an image"
   },
   {
     "field_name": "Python Version",
@@ -167,12 +167,12 @@
   {
     "field_name": "GPU Runtime Version (was ROCm Version)",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "CUDA 12.8"
+    "value": "CUDA 12.6 (nvcc 12.6.85 preinstalled in the container; setup installs 12.8 only when nvcc is missing). Driver 580.159.04 reports CUDA 13.0"
   },
   {
     "field_name": "BLAS Version (was rocBLAS version)",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "N/A - rocBLAS not used"
+    "value": "N/A - cuBLAS not used"
   },
   {
     "field_name": "Mistral-7B Version",
@@ -217,7 +217,7 @@
   {
     "field_name": "g++ Version",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "N/A - CMake not used"
+    "value": "N/A - g++ not used"
   },
   {
     "field_name": "Known Runtime Constraints (<=35 Words Each)",
@@ -362,7 +362,7 @@
   {
     "field_name": "Schema Last Updated",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "2026-09-05"
+    "value": "2026-10-17"
   },
   {
     "field_name": "Installation and Execution Summary",
@@ -377,12 +377,12 @@
   {
     "field_name": "ROCm Version",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "CUDA 12.8"
+    "value": "CUDA 12.6 (nvcc 12.6.85 preinstalled in the container; setup installs 12.8 only when nvcc is missing). Driver 580.159.04 reports CUDA 13.0"
   },
   {
     "field_name": "rocBLAS Version",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "N/A - rocBLAS not used"
+    "value": "N/A - cuBLAS not used"
   },
   {
     "field_name": "Execution Summary (Run and Measure)",
@@ -407,7 +407,7 @@
   {
     "field_name": "Profile Parameter Values",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Parameters_SmokeBaselineExtend",
-    "value": "{\"num_gpus\": {\"smoke\": \"1\", \"baseline\": \"1\", \"extended\": \"1\", \"notes\": \"\"}, \"collective\": {\"smoke\": \"all\", \"baseline\": \"all\", \"extended\": \"all\", \"notes\": \"\"}, \"min_bytes\": {\"smoke\": \"8\", \"baseline\": \"8\", \"extended\": \"8\", \"notes\": \"\"}, \"max_bytes\": {\"smoke\": \"1024\", \"baseline\": \"16777216\", \"extended\": \"16777216\", \"notes\": \"\"}, \"step_factor\": {\"smoke\": \"2\", \"baseline\": \"2\", \"extended\": \"2\", \"notes\": \"\"}, \"warmup_iters\": {\"smoke\": \"1\", \"baseline\": \"5\", \"extended\": \"10\", \"notes\": \"\"}, \"num_iterations\": {\"smoke\": \"2\", \"baseline\": \"295000\", \"extended\": \"620000\", \"notes\": \"00_75 H100 20260905: collector uses min_bytes only; 600000 inner iters is still ~10s on 1 GPU. Duration is overlay rounds smoke=1 / baseline=20 / extended=48. | 2026-09-11 GARY_LEDGER (runtime_ledger_201_232): baseline (600000 iters, no prior retune) measured 2:09/2:13/2:16 (avg 2:13) across 3 live loop runs against a 'make at least 3 min' target. Rate ~4524 iters/s. Scaled 600000 x (240/133) ~= 1.1e6 to retarget ~4 min baseline. Extended not flagged -- left unchanged. Unconfirmed by a fresh run. | 2026-09-24: collector now sweeps min_bytes..max_bytes (was min_bytes only) with iterations scaled per size; repeat rounds halved to baseline 10 / extended 24 to hold duration. num_iterations is the per-sweep budget at min_bytes. Re-time on the next run. | 2026-09-28 GARY_LEDGER (aggregated_runtime_ledgers_101_201_301_401_20260928_9am; targets baseline 3-5 min, extended 8-15 min): 1100000/1520000 -> 480000/850000. baseline 1.1e6 measured 7:45/7:51, extended 1.52e6 measured 19:49/21:02 (overlay rounds 10/24). Chosen between the linear scale and the two-point fit (~141 s fixed): baseline predicted 3:30-4:45, extended 11:20-12:30. Unconfirmed by a fresh run. | 2026-10-06 GARY_LEDGER (overnight 101-432 ledgers; target baseline under 5 min): 480000 measured 6:12/6:30 with overlay rounds=10. Scaled 480000 x (240/390) ~= 295000 to retarget ~4:00 from the slower run. Extended unchanged.\"}}"
+    "value": "{\"num_gpus\": {\"smoke\": \"1\", \"baseline\": \"1\", \"extended\": \"1\", \"notes\": \"\"}, \"collective\": {\"smoke\": \"all\", \"baseline\": \"all\", \"extended\": \"all\", \"notes\": \"\"}, \"min_bytes\": {\"smoke\": \"8\", \"baseline\": \"8\", \"extended\": \"8\", \"notes\": \"\"}, \"max_bytes\": {\"smoke\": \"1024\", \"baseline\": \"1073741824\", \"extended\": \"1073741824\", \"notes\": \"2026-10-18: baseline/extended max_bytes 16 MiB -> 1 GiB.\"}, \"step_factor\": {\"smoke\": \"2\", \"baseline\": \"2\", \"extended\": \"2\", \"notes\": \"\"}, \"warmup_iters\": {\"smoke\": \"1\", \"baseline\": \"5\", \"extended\": \"10\", \"notes\": \"\"}, \"num_iterations\": {\"smoke\": \"2\", \"baseline\": \"295000\", \"extended\": \"620000\", \"notes\": \"00_75 H100 20260905: collector uses min_bytes only; 600000 inner iters is still ~10s on 1 GPU. Duration is overlay rounds smoke=1 / baseline=20 / extended=48. | 2026-09-11 GARY_LEDGER (runtime_ledger_201_232): baseline (600000 iters, no prior retune) measured 2:09/2:13/2:16 (avg 2:13) across 3 live loop runs against a 'make at least 3 min' target. Rate ~4524 iters/s. Scaled 600000 x (240/133) ~= 1.1e6 to retarget ~4 min baseline. Extended not flagged -- left unchanged. Unconfirmed by a fresh run. | 2026-09-24: collector now sweeps min_bytes..max_bytes (was min_bytes only) with iterations scaled per size; repeat rounds halved to baseline 10 / extended 24 to hold duration. num_iterations is the per-sweep budget at min_bytes. Re-time on the next run. | 2026-09-28 GARY_LEDGER (aggregated_runtime_ledgers_101_201_301_401_20260928_9am; targets baseline 3-5 min, extended 8-15 min): 1100000/1520000 -> 480000/850000. baseline 1.1e6 measured 7:45/7:51, extended 1.52e6 measured 19:49/21:02 (overlay rounds 10/24). Chosen between the linear scale and the two-point fit (~141 s fixed): baseline predicted 3:30-4:45, extended 11:20-12:30. Unconfirmed by a fresh run. | 2026-10-06 GARY_LEDGER (overnight 101-432 ledgers; target baseline under 5 min): 480000 measured 6:12/6:30 with overlay rounds=10. Scaled 480000 x (240/390) ~= 295000 to retarget ~4:00 from the slower run. Extended unchanged.\"}}"
   },
   {
     "field_name": "Profile Command Authorship",

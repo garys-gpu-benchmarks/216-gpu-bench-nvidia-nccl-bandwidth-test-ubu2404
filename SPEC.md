@@ -11,7 +11,7 @@ Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message
 | num_gpus | `--num-gpus` | smoke=1, baseline=1, extended=1 | 1 | From Parameter list; see Execution Description With Parameters. |
 | collective | `--collective` | smoke=all, baseline=all, extended=all | all | From Parameter list; see Execution Description With Parameters. |
 | min_bytes | `--min-bytes` | smoke=8, baseline=8, extended=8 | 8 | From Parameter list; see Execution Description With Parameters. |
-| max_bytes | `--max-bytes` | smoke=1024, baseline=16777216, extended=16777216 | 16777216 | From Parameter list; see Execution Description With Parameters. |
+| max_bytes | `--max-bytes` | smoke=1024, baseline=1073741824, extended=1073741824 | 1073741824 | From Parameter list; see Execution Description With Parameters. |
 | step_factor | `--step-factor` | smoke=2, baseline=2, extended=2 | 2 | From Parameter list; see Execution Description With Parameters. |
 | warmup_iters | `--warmup-iters` | smoke=1, baseline=5, extended=10 | 5 | From Parameter list; see Execution Description With Parameters. |
 | num_iterations | `--num-iterations` | smoke=2, baseline=295000, extended=620000 | 295000 | From Parameter list; see Execution Description With Parameters. |
@@ -26,14 +26,14 @@ Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup> <ite
 
 NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples
 
-sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message
+sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_algbw_gb_s,allreduce_latency_at_min_bytes_us,error_message
 0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),
 
 ## Metrics
 
-- **#1: Bus bandwidth at max message size, GB/s** — stored as `busbw_gb_s`.
-- **#2: Algorithm bandwidth at max message size, GB/s** — stored as `algbw_gb_s`.
-- **#3: Latency at min message size, us** — stored as `latency_us`.
+- **#1: All-reduce bus bandwidth at max message size, GB/s, na on single GPU** — stored as `allreduce_busbw_gb_s`.
+- **#2: All-reduce algorithm bandwidth at max message size, GB/s, na on single GPU** — stored as `allreduce_algbw_gb_s`.
+- **#3: All-reduce latency at min message size, us, na on single GPU** — stored as `allreduce_latency_at_min_bytes_us`.
 
 ## Framework
 
@@ -80,7 +80,7 @@ BENCHMARK_DB=tests/fixtures/benchmark.db \
 
 NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples
 
-sample_index,status,collective,num_gpus,bytes,busbw_gb_s,algbw_gb_s,latency_us,error_message
+sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_algbw_gb_s,allreduce_latency_at_min_bytes_us,error_message
 0,ok,all_reduce,1,1024,na (requires at least two GPUs),na (requires at least two GPUs),na (requires at least two GPUs),
 
 ```bash

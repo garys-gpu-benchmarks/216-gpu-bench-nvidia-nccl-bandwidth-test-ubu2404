@@ -13,8 +13,8 @@ sweep:
   min_bytes: 8
   max_bytes:
     smoke: 1024
-    baseline: 16777216
-    extended: 16777216
+    baseline: 1073741824
+    extended: 1073741824
   step_factor: 2
   warmup_iters:
     smoke: 1
