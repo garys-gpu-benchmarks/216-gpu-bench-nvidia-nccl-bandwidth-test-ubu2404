@@ -14,7 +14,7 @@ Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message
 | max_bytes | `--max-bytes` | smoke=1024, baseline=1073741824, extended=1073741824 | 1073741824 | From Parameter list; see Execution Description With Parameters. |
 | step_factor | `--step-factor` | smoke=2, baseline=2, extended=2 | 2 | From Parameter list; see Execution Description With Parameters. |
 | warmup_iters | `--warmup-iters` | smoke=1, baseline=5, extended=10 | 5 | From Parameter list; see Execution Description With Parameters. |
-| num_iterations | `--num-iterations` | smoke=2, baseline=157000, extended=382000 | 157000 | From Parameter list; see Execution Description With Parameters. |
+| num_iterations | `--num-iterations` | smoke=2, baseline=65000, extended=200000 | 65000 | From Parameter list; see Execution Description With Parameters. |
 
 ## Invocation
 
