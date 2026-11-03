@@ -46,7 +46,6 @@ Validation and logging:
 
 Workload options:
   --num-gpus <value>            Override num_gpus
-  --collective <value>            Override collective
   --min-bytes <value>            Override min_bytes
   --max-bytes <value>            Override max_bytes
   --step-factor <value>            Override step_factor
@@ -86,7 +85,6 @@ LOG_LEVEL_VALUE="INFO"
 OUTPUT_FORMAT=""
 SAVE_OPTIONS_FILE=""
 NUM_GPUS=""
-COLLECTIVE=""
 MIN_BYTES=""
 MAX_BYTES=""
 STEP_FACTOR=""
@@ -113,7 +111,6 @@ while [[ $# -gt 0 ]]; do
     --output-format) OUTPUT_FORMAT="${2:-}"; shift 2 ;;
     --save-options-file) SAVE_OPTIONS_FILE="${2:-}"; shift 2 ;;
     --num-gpus) NUM_GPUS="${2:-}"; shift 2 ;;
-    --collective) COLLECTIVE="${2:-}"; shift 2 ;;
     --min-bytes) MIN_BYTES="${2:-}"; shift 2 ;;
     --max-bytes) MAX_BYTES="${2:-}"; shift 2 ;;
     --step-factor) STEP_FACTOR="${2:-}"; shift 2 ;;
@@ -158,7 +155,6 @@ PY
 }
 
 NUM_GPUS="${NUM_GPUS:-$(yaml_get num_gpus)}"
-COLLECTIVE="${COLLECTIVE:-$(yaml_get collective)}"
 MIN_BYTES="${MIN_BYTES:-$(yaml_get min_bytes)}"
 MAX_BYTES="${MAX_BYTES:-$(yaml_get max_bytes)}"
 STEP_FACTOR="${STEP_FACTOR:-$(yaml_get step_factor)}"
@@ -170,7 +166,6 @@ OUTPUT_FORMAT="${OUTPUT_FORMAT:-csv}"
 BENCHMARK_RUN_COMMAND="bash run_benchmark.sh --${PROFILE}"
 [[ "${VALIDATE}" -eq 1 ]] && BENCHMARK_RUN_COMMAND+=" --validate"
 [[ -n "${NUM_GPUS}" ]] && BENCHMARK_RUN_COMMAND+=" --num-gpus $(printf %q "${NUM_GPUS}")"
-[[ -n "${COLLECTIVE}" ]] && BENCHMARK_RUN_COMMAND+=" --collective $(printf %q "${COLLECTIVE}")"
 [[ -n "${MIN_BYTES}" ]] && BENCHMARK_RUN_COMMAND+=" --min-bytes $(printf %q "${MIN_BYTES}")"
 [[ -n "${MAX_BYTES}" ]] && BENCHMARK_RUN_COMMAND+=" --max-bytes $(printf %q "${MAX_BYTES}")"
 [[ -n "${STEP_FACTOR}" ]] && BENCHMARK_RUN_COMMAND+=" --step-factor $(printf %q "${STEP_FACTOR}")"
@@ -219,7 +214,6 @@ run_collection() {
   fi
   grep -q -- '--output-format' <<<"${help}" && collect_args+=(--output-format "${OUTPUT_FORMAT}")
   grep -q -- '--num-gpus' <<<"${help}" && collect_args+=(--num-gpus "${NUM_GPUS}")
-  grep -q -- '--collective' <<<"${help}" && collect_args+=(--collective "${COLLECTIVE}")
   grep -q -- '--min-bytes' <<<"${help}" && collect_args+=(--min-bytes "${MIN_BYTES}")
   grep -q -- '--max-bytes' <<<"${help}" && collect_args+=(--max-bytes "${MAX_BYTES}")
   grep -q -- '--step-factor' <<<"${help}" && collect_args+=(--step-factor "${STEP_FACTOR}")

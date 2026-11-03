@@ -2,14 +2,13 @@
 
 ## Execution Description
 
-Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter. warmup_iters and num_iterations time each size Sweep dimensions: num_gpus, collective, min_bytes, max_bytes, step_factor, warmup_iters, num_iterations.
+Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8) Sweep dimensions: num_gpus, min_bytes, max_bytes, step_factor, warmup_iters, num_iterations.
 
 ## Parameters
 
 | Parameter | CLI Flag | Tested Values | Default | Description |
 | --- | --- | --- | --- | --- |
 | num_gpus | `--num-gpus` | smoke=1, baseline=1, extended=1 | 1 | From Parameter list; see Execution Description With Parameters. |
-| collective | `--collective` | smoke=all, baseline=all, extended=all | all | From Parameter list; see Execution Description With Parameters. |
 | min_bytes | `--min-bytes` | smoke=8, baseline=8, extended=8 | 8 | From Parameter list; see Execution Description With Parameters. |
 | max_bytes | `--max-bytes` | smoke=1024, baseline=1073741824, extended=1073741824 | 1073741824 | From Parameter list; see Execution Description With Parameters. |
 | step_factor | `--step-factor` | smoke=2, baseline=2, extended=2 | 2 | From Parameter list; see Execution Description With Parameters. |
@@ -37,7 +36,7 @@ sample_index,status,collective,num_gpus,bytes,allreduce_busbw_gb_s,allreduce_alg
 
 ## Framework
 
-Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter.
+Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8)
 
 ## Installation and Execution Summary
 
@@ -97,10 +96,10 @@ bash run_benchmark.sh --profile extended --validate
 2. `run.error_message` is NULL.
 3. `started_at` and `finished_at` are valid ISO-8601 UTC strings.
 4. All required aggregate metrics in `runs` are non-NULL and finite.
-5. All required aggregate metrics are physically sensible (positive values). Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter.
+5. All required aggregate metrics are physically sensible (positive values). Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8)
 6. At least 2 sample rows exist for the latest `run_id` (sweep coverage).
 7. No sample has `status = 'error'`.
-8. Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8). collective: comma-separated all_reduce, all_gather, broadcast, reduce, reduce_scatter.
+8. Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8)
 
 ### Baseline / Threshold configuration (`config/benchmark_config.yaml`)
 

@@ -9,7 +9,6 @@
 sweep:
   profile: smoke
   num_gpus: 1
-  collective: all
   min_bytes: 8
   max_bytes:
     smoke: 1024
