@@ -21,7 +21,7 @@ Compile src/nccl_bw.cu with nvcc/NCCL and run bin/nccl_bw for each collective an
 Measure NCCL collective bandwidth and latency
 
 ## Validation Objective
-Validates NCCL collective bandwidth and latency across the GPUs in the communicator. On one GPU the three metrics are na (requires at least two GPUs)
+Validates NCCL bandwidth and latency. On one GPU the three metrics are na (needs two GPUs)
 
 ## Workload Category
 Memory, Bandwidth & Data Movement
