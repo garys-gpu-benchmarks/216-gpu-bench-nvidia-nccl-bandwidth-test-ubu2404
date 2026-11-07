@@ -16,12 +16,11 @@ capture_benchmark_run_command_submitted "$@"
 
 usage() {
   cat <<'USAGE'
+
 Usage: bash run_benchmark.sh [OPTIONS]
 
 Workload Name:          NCCL Bandwidth Test.
 Main Goal:              Measure NCCL collective bandwidth and latency.
-Validation Objective:   Validates NCCL bandwidth and latency. On one GPU the three metrics are na
-                        (needs two GPUs).
 Command Tools Executed: Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup>
                         <iters> <num_gpus> <collective>.
 
