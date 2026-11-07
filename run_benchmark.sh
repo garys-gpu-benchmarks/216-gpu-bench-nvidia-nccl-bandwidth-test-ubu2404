@@ -30,12 +30,22 @@ Profiles (default: --smoke):
   --extended                    Run extended profile
 
 Parameters (override the profile's value):
-  --num-gpus <n>                Number of GPUs participating in the workload (smoke/baseline/extended: 1)
+  --num-gpus <n>                Number of GPUs participating in the workload
+                                  all profiles: 1
   --min-bytes <n>               Minimum message or transfer size (smoke/baseline/extended: 8)
-  --max-bytes <n>               Maximum message or transfer size (smoke 1024, baseline 1073741824, extended 1073741824)
-  --step-factor <n>             Multiplier between successive sweep sizes (smoke/baseline/extended: 2)
-  --warmup-iters <n>            Untimed warm-up repetitions before measurement (smoke 1, baseline 5, extended 10)
-  --num-iterations <n>          Number of timed repetitions (smoke 2, baseline 65000, extended 200000)
+  --max-bytes <n>               Maximum message or transfer size
+                                  smoke:             1024
+                                  baseline/extended: 1073741824
+  --step-factor <n>             Multiplier between successive sweep sizes
+                                  all profiles: 2
+  --warmup-iters <n>            Untimed warm-up repetitions before measurement
+                                  smoke:    1
+                                  baseline: 5
+                                  extended: 10
+  --num-iterations <n>          Number of timed repetitions
+                                  smoke:    2
+                                  baseline: 65000
+                                  extended: 200000
 
 General options:
   --config <file>               Config file (default: config/benchmark_config.yaml)
