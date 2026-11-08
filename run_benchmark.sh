@@ -19,10 +19,10 @@ usage() {
 
 Usage: bash run_benchmark.sh [OPTIONS]
 
-Workload Name:          NCCL Bandwidth Test.
-Main Goal:              Measure NCCL collective bandwidth and latency.
+Workload Name:          NCCL Bandwidth Test
+Main Goal:              Measure NCCL collective bandwidth and latency
 Command Tools Executed: Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup>
-                        <iters> <num_gpus> <collective>.
+                        <iters> <num_gpus> <collective>
 
 Profiles (default: --smoke):
   --smoke                       Run smoke profile

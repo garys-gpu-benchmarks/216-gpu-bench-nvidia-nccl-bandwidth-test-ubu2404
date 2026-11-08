@@ -66,7 +66,7 @@ Every run is checked for completeness and against any `thresholds:` or `baseline
 ## Requirements
 
 - Ubuntu 24.04, root or sudo for `setup.sh`
-- NVIDIA GPU with CUDA 12.6 (validated on H100 SXM 80GB)
+- NVIDIA GPU with CUDA 12.6
 - CUDA Runtime, NVCC, NCCL, Python 3.12. `setup.sh` installs what is missing; Python packages go into a repo-local `.venv`.
 
 ## Run the Whole Bundle

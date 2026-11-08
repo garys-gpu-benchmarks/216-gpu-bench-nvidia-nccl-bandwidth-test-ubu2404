@@ -202,17 +202,17 @@
   {
     "field_name": "GPU Model",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "H100 SXM 80GB"
-  },
-  {
-    "field_name": "Raw Output Format",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples"
+    "value": "--"
   },
   {
     "field_name": "Primary Record Granularity",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "one row for all_reduce"
+  },
+  {
+    "field_name": "Raw Output Format",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "NCCL all_reduce stdout plus one CSV row. Column order is busbw then algbw. A single row is duplicated to two samples"
   },
   {
     "field_name": "Raw Output Example",
@@ -225,19 +225,19 @@
     "value": "collective, num_gpus (GPUs used), bytes (largest size), allreduce_busbw_gb_s and allreduce_algbw_gb_s (at the largest size), allreduce_latency_at_min_bytes_us (at the smallest size)"
   },
   {
-    "field_name": "Success Criteria",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "every collective and size exits 0 and reports busbw"
-  },
-  {
     "field_name": "Parser and Normalization Notes",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "Below two GPUs each metric is the text na (requires at least two GPUs), and summary.json reports that text. bin/nccl_bw uses the nccl-tests busbw factors: 2(n-1)/n for all_reduce, (n-1)/n for all_gather and reduce_scatter, 1 for broadcast and reduce. The collector publishes all_reduce only. Every size is in nccl_sweep.csv"
   },
   {
+    "field_name": "Success Criteria",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "every collective and size exits 0 and reports busbw"
+  },
+  {
     "field_name": "Hardware Config",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "NVIDIA H100 SXM host (20+ vCPUs, 128+ GB RAM, local NVMe), 1x H100 SXM (80 GB HBM3, sm_90, 132 SMs)"
+    "value": "Cloud GPU host such as a RunPod Pod (20+ vCPUs, 128+ GB RAM, local NVMe), 1x NVIDIA data-center GPU (80+ GB HBM; model varies by provider)"
   },
   {
     "field_name": "GPU Architecture",
