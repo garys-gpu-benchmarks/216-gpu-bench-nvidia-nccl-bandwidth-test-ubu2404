@@ -40,6 +40,11 @@
     "value": "Compile nccl_bw.cu with nvcc and NCCL; run bin/nccl_bw <min_bytes> <warmup> <iters> <num_gpus> <collective>"
   },
   {
+    "field_name": "Execution Description With Parameters",
+    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
+    "value": "Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8)"
+  },
+  {
     "field_name": "Metrics",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "#1: All-reduce bus bandwidth at max message size, GB/s, na on single GPU (allreduce_busbw_gb_s); #2: All-reduce algorithm bandwidth at max message size, GB/s, na on single GPU (allreduce_algbw_gb_s); #3: All-reduce latency at min message size, us, na on single GPU (allreduce_latency_at_min_bytes_us)"
@@ -173,11 +178,6 @@
     "field_name": "Command Methodology",
     "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
     "value": "Sweep message sizes per collective with the local bin/nccl_bw (single process, ncclCommInitAll), recording bandwidth at the largest size and latency at the smallest"
-  },
-  {
-    "field_name": "Execution Description With Parameters",
-    "source_file": "BenchmarkSpecDefinitions.xlsx::Workload_Definitions",
-    "value": "Builds src/nccl_bw.cu and runs bin/nccl_bw for each yaml collective over message sizes from min_bytes to max_bytes by step_factor. num_gpus: GPUs in the communicator (capped at the GPUs present, max 8)"
   },
   {
     "field_name": "Execution Domain",
